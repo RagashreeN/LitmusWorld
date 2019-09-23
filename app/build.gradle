@@ -11,10 +11,34 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == "com.android.support") {
+                if (!requested.name.startsWith("multidex")) {
+                    details.useVersion "26.+"
+                }
+            }
+        }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        Dev {
+            applicationId "com.litmus.interview"
+            buildConfigField "String", "SERVER_URL",'"https://en.wikipedia.org/"'/* '"https://www.mediawiki.org/"'*/
+            versionCode 1
+            versionName "1.0.1"
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         }
     }
 }
@@ -26,4 +50,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'com.jakewharton:butterknife:8.5.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    implementation 'com.android.support:multidex:1.0.2'
+    implementation 'com.hannesdorfmann.mosby3:mvp:3.0.4'
+    /*Note : For Glide image loader library*/
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    annotationProcessor 'com.google.auto.value:auto-value:1.1'
+
 }
